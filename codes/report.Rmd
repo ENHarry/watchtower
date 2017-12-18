@@ -1,0 +1,79 @@
+---
+title: "Report on MediaTech Internship at NBCUniversal"
+author: "Emi Harry"
+date: "12/18/2017"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = F)
+```
+
+# Executive Summary
+
+
+# Introduction
+
+## Job Description
+At the point of recruitment, my job description was listed as follows:
+* Conduct analytics on existing consumer behavioral data.
+* Processing of real consumer data and ability to apply tech analysis to driving product development.
+* Produce meaningful results from a large set of data. 
+* Gathering insights into this yet untapped set of consumer data would help inform new product features to further drive consumer engagement.
+
+## Specific Project Description
+### Overview
+The watchTower data is stored for the sole purpose of ensuring that the mobile app users are able to continue watching a specific video from where they last stopped.
+
+### Task
+Since the data had never be analysed, I was tasked with carrying out analysis on it to see if there were useful insights within the data. Being given free rein on the technologies to use, as such, the programming language being used is R, while Tableau will be used for all visualizations.
+
+### Stage 1: Data Cleaning and Pre-processing in R
+
+The first step in the data cleaning process was to view the data in a simple text editor. This enabled me to understand the format of the data identify the following:
+* Relevant data to be read into R
+* characters like '{},"",:' that needed to be removed from the data frame. 
+The sample of the raw data is as shown below:
+
+```{r, raw}
+# id,flags,expiration,cas,value,rev,vbid,dtype
+# 072b53d0-0cd5-46d9-abf3-d1c04b73f68c,33554432,0,1482372320294338560,"{""showId"":""7162758c-7540-4ef9-ada5-30215c8ba039"",""deleted"":false,""favoriteType"":""shows"",""customFields"":{""device"":""IOS""},""brandId"":""bravo"",""createdTimestamp"":1482372320289,""_class"":""com.nbcuni.watchtower.api.model.Favorite"",""type"":""FAVORITES"",""userId"":""b708e56537fa18aefb3c6180223a437138534f107e965c56b2e667562fb1dd79"",""updatedTimestamp"":1482372320289}",3,818,1
+```
+
+Based on the sample above, I worte a function called "cleanWatchTower", which takes in the file name and retruns a list consistinn of two separate data frames. One for the favorites data, and the other for the watches data.
+
+```{r }
+# apply the customized parsing function to each data set.
+data1 <- cleanWatchTower("watchtower_NBCPCONRAPIWT_10.17.103.61%253A8091.csv")
+newfav1 <- data1$newfav
+newwatch1 <- data1$newwatch
+
+data2 <- cleanWatchTower("watchtower_NBCPCONRAPIWT_10.17.103.125%253A8091.csv")
+newfav2 <- data2$newfav
+newwatch2 <- data2$newwatch
+
+data3 <- cleanWatchTower("watchtower_NBCPCONRAPIWT_10.17.103.126%253A8091.csv")
+newfav3 <- data3$newfav
+newwatch3 <- data3$newwatch
+
+# Combine the watch transcations and favorite transactions for the 3 different data sets
+result1 <- compare_mutate(newwatch1, newfav1)
+result2 <- compare_mutate(newwatch2, newfav2)
+result3 <- compare_mutate(newwatch, newfav)
+
+# Combine all 3 data sets and ensure there are no duplicates
+cleanedData <- rbind(result1, result2)
+cleanedData <- rbind(cleanedData, result3)
+uniquedata <- unique(cleanedData)
+```
+### Stage 2: Preliminary Analysis in R
+
+### Stage 3:
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
