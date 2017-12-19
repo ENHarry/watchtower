@@ -250,40 +250,6 @@ suw <- weee %>%
   filter(No_Users > 100)
 write.csv(suw, "tri_brand.csv")
 
-no <- suw %>% 
-  ungroup() %>% 
-  mutate(norm_users = round((No_Users - min(No_Users))/(max(No_Users)-min(No_Users)), 3))
-write.csv(no, "tri.csv")
-
-# Users with 2 brands
-suw <- data.frame(t(apply(tu_tally, 1, sort)))
-weee <- data.frame(matrix(0, nrow = 76, ncol = 3))
-weee$X1 <- as.character(suw$X2)
-weee$X2 <- as.character(suw$X3)
-weee$X3 <- as.character(suw$X1)
-
-we2 <- data.frame(matrix(0, nrow = 3, ncol = 3))
-we2$X1 <- as.character((weee[c(1, 8, 9), 3]))
-we2$X2 <- as.character((weee[c(1, 8, 9), 1]))
-we2$X3 <- as.character((weee[c(1, 8, 9), 2]))
-
-weee[c(1, 8, 9), 1] <- we2[1:3, 1]
-weee[c(1, 8, 9), 2] <- we2[1:3, 2]
-weee[c(1, 8, 9), 3] <- we2[1:3, 3]
-
-suw <- weee %>% 
-  filter(X1 != "esquire" | X2 != "esquire") %>% 
-  group_by(X1, X2) %>% 
-  summarise(No_Users = sum(as.numeric(X3))) %>% 
-  filter(No_Users > 120)
-setnames(suw, c("X1", "X2"), c("Brand1", "Brand2"))
-write.csv(suw, "tu_brand.csv")
-
-no <- suw %>% 
-  ungroup() %>% 
-  mutate(norm_users = (No_Users - min(No_Users))/(max(No_Users)-min(No_Users))) %>% 
-  unite(Brands, Brand1, Brand2, sep = ",")
-write.csv(no, "tu.csv")
 
 # filter out the years that dont match 2016 and 2017
 clWT <- cl %>% 
